@@ -1,28 +1,45 @@
+/* eslint-disable quotes */ /* eslint-disable */
+
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-container class="pt-10">
+      <v-row align="center" justify="center">
+        <v-col sm="6" offset-sm="2">
+          <v-text-field v-model="website" label="Define Website"></v-text-field>
+        </v-col>
+        <v-col cols="4">
+          <v-btn @click="generateQrCode" :disabled="isWebsite()">Generate QR-Code</v-btn>
+        </v-col>
+      </v-row>
+      <v-layout v-if="generateQrCodeUrl" justify-center>
+        <img :src="generateQrCodeUrl" alt="" />
+      </v-layout>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld,
+  components: {},
+
+  data() {
+    return {
+      website: '',
+      generateQrCodeUrl: '',
+    };
+  },
+
+  methods: {
+    generateQrCode() {
+      this.generateQrCodeUrl = `http://api.qrserver.com/v1/create-qr-code/?data=${this.website}!&size=150x150`;
+    },
+    isWebsite() {
+      /* eslint-disable-next-line */
+      const regex =
+        // eslint-disable-next-line no-useless-escape
+        /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
+      return this.website.match(regex) === null;
+    },
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
